@@ -6,8 +6,6 @@ export function FiltersBar({
   tags,
   activeTag,
   onTagChange,
-  sortDesc,
-  onSortToggle,
 }: FiltersBarProps) {
   return (
     <div className="flex items-center gap-2 mb-6 flex-wrap">
@@ -24,19 +22,6 @@ export function FiltersBar({
           #{tag}
         </Chip>
       ))}
-
-      {tags.length > 0 && (
-        <>
-          <div className="w-px h-5 bg-border mx-1" />
-          <button
-            onClick={onSortToggle}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border bg-surface-2 text-muted font-mono text-[12px] hover:text-text hover:border-border-2 transition-all duration-100"
-          >
-            <span>{sortDesc ? "↓" : "↑"}</span>
-            {sortDesc ? "Newest" : "Oldest"}
-          </button>
-        </>
-      )}
     </div>
   );
 }

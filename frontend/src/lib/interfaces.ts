@@ -20,7 +20,6 @@ export interface FiltersBarProps {
   tags: string[];
   activeTag: string | null;
   onTagChange: (tag: string | null) => void;
-  sortDesc: boolean;
   onSortToggle: () => void;
 }
 

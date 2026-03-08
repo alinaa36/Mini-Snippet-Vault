@@ -34,7 +34,6 @@ export default function HomePage() {
   const [activeType, setActiveType] = useState<SnippetType | null>(null);
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [page, setPage] = useState(1);
-  const [sortDesc, setSortDesc] = useState(true);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const [modalMode, setModalMode] = useState<"create" | "edit" | null>(null);
@@ -174,9 +173,7 @@ export default function HomePage() {
             tags={tags}
             activeTag={activeTag}
             onTagChange={handleTagChange}
-            sortDesc={sortDesc}
             onSortToggle={() => {
-              setSortDesc(!sortDesc);
               setPage(1);
             }}
           />
