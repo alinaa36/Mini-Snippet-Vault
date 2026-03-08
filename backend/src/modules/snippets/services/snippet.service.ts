@@ -22,8 +22,8 @@ export class SnippetService {
 
   async findAll(
     query: GetSnippetDto,
-  ): Promise<{ data: Snippet[]; total: number }> {
-    const { page, limit, q, tag } = query;
+  ): Promise<{ data: Snippet[]; total: number; pages: number }> {
+    const { page = 1, limit = 9, q, tag } = query; // limit = 9 як у тебе на фронті
     const skip = (page - 1) * limit;
 
     const filters = this.prepareFilters(q, tag);
@@ -39,7 +39,11 @@ export class SnippetService {
       this.snippetModel.countDocuments(filters).exec(),
     ]);
 
-    return { data: data, total };
+    return {
+      data: data as Snippet[],
+      total,
+      pages: Math.ceil(total / limit),
+    };
   }
 
   private prepareFilters(search?: string, tag?: string) {
