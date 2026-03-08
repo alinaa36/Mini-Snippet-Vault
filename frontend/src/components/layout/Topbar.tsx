@@ -5,13 +5,18 @@ import { Button } from "@/components/ui/Button";
 import { ViewMode } from "@/types";
 import { TopbarProps } from "@/lib/interfaces";
 
+interface ExtendedTopbarProps extends TopbarProps {
+  onMenuClick?: () => void;
+}
+
 export function Topbar({
   searchValue,
   onSearchChange,
   viewMode,
   onViewChange,
   onNewSnippet,
-}: TopbarProps) {
+  onMenuClick,
+}: ExtendedTopbarProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -26,8 +31,15 @@ export function Topbar({
   }, []);
 
   return (
-    <header className="h-16 bg-surface border-b border-border flex items-center px-7 gap-4 sticky top-0 z-40">
-      <div className="flex-1 max-w-[480px] relative">
+    <header className="h-16 bg-surface border-b border-border flex items-center px-4 sm:px-7 gap-4 sticky top-0 z-40">
+      <button
+        onClick={onMenuClick}
+        className="w-10 h-10 flex items-center justify-center rounded-lg border border-border bg-surface2 text-muted hover:text-emerald-500 hover:border-emerald-500/50 transition-all duration-200"
+      >
+        <span className="text-xl">☰</span>
+      </button>
+
+      <div className="flex-1 max-w-[480px] relative hidden sm:block">
         <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted text-[14px] pointer-events-none">
           ⌕
         </span>
@@ -45,7 +57,7 @@ export function Topbar({
       </div>
 
       <div className="ml-auto flex items-center gap-2.5">
-        <div className="flex bg-surface2 border border-border rounded-lg p-0.5 gap-0.5">
+        <div className="hidden xs:flex bg-surface2 border border-border rounded-lg p-0.5 gap-0.5">
           {(["grid", "list"] as ViewMode[]).map((v) => (
             <button
               key={v}
@@ -53,7 +65,7 @@ export function Topbar({
               title={`${v} view`}
               className={
                 viewMode === v
-                  ? "w-8 h-8 rounded-md text-[13px] transition-all duration-100 bg-surface text-text"
+                  ? "w-8 h-8 rounded-md text-[13px] transition-all duration-100 bg-surface text-text shadow-sm"
                   : "w-8 h-8 rounded-md text-[13px] transition-all duration-100 text-muted hover:text-text"
               }
             >
@@ -62,8 +74,13 @@ export function Topbar({
           ))}
         </div>
 
-        <Button variant="primary" onClick={onNewSnippet}>
-          <span className="text-[16px] leading-none">+</span> New Snippet
+        <Button
+          variant="primary"
+          onClick={onNewSnippet}
+          className="h-10 px-3 sm:px-4"
+        >
+          <span className="text-[18px] leading-none sm:mr-1.5">+</span>
+          <span className="hidden sm:inline">New Snippet</span>
         </Button>
       </div>
     </header>

@@ -28,6 +28,8 @@ export default function HomePage() {
   const router = useRouter();
   const { toasts, toast, remove } = useToast();
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   const [searchQ, setSearchQ] = useState("");
   const [activeType, setActiveType] = useState<SnippetType | null>(null);
   const [activeTag, setActiveTag] = useState<string | null>(null);
@@ -54,14 +56,18 @@ export default function HomePage() {
   const { data, loading, error, refetch } = useSnippets(queryParams);
   const { tags } = useTags();
 
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
   const handleTypeChange = useCallback((type: SnippetType | null) => {
     setActiveType(type);
     setPage(1);
+    setIsSidebarOpen(false);
   }, []);
 
   const handleTagChange = useCallback((tag: string | null) => {
     setActiveTag(tag);
     setPage(1);
+    setIsSidebarOpen(false);
   }, []);
 
   const handleSearch = useCallback((q: string) => {
@@ -113,33 +119,51 @@ export default function HomePage() {
 
   return (
     <div className="flex min-h-screen bg-bg selection:bg-emerald-500/20">
-      <Sidebar
-        tags={tags}
-        activeType={activeType}
-        activeTag={activeTag}
-        onTypeChange={handleTypeChange}
-        onTagChange={handleTagChange}
-      />
+      <div
+        className={`
+        fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out
+        lg:relative lg:translate-x-0 
+        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+      `}
+      >
+        <Sidebar
+          tags={tags}
+          activeType={activeType}
+          activeTag={activeTag}
+          onTypeChange={handleTypeChange}
+          onTagChange={handleTagChange}
+          onClose={() => setIsSidebarOpen(false)}
+          isOpen={isSidebarOpen}
+        />
+      </div>
 
-      <div className="flex-1 ml-[240px] flex flex-col min-h-screen">
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden backdrop-blur-sm"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      <div className="flex-1 flex flex-col min-h-screen w-full transition-all duration-300">
         <Topbar
           searchValue={searchQ}
           onSearchChange={handleSearch}
           viewMode={viewMode}
           onViewChange={setViewMode}
           onNewSnippet={() => setModalMode("create")}
+          onMenuClick={toggleSidebar}
         />
 
-        <main className="flex-1 px-8 py-8">
-          <header className="mb-8">
-            <h1 className="font-display text-3xl font-bold text-text tracking-tight uppercase">
+        <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 lg:py-8 max-w-[1600px] mx-auto w-full">
+          <header className="mb-6 lg:mb-8">
+            <h1 className="font-display text-2xl sm:text-3xl font-bold text-text tracking-tight uppercase">
               {activeType
                 ? `${activeType}s`
                 : activeTag
                   ? `#${activeTag}`
                   : "All Snippets"}
             </h1>
-            <p className="text-sm text-muted mt-1 font-mono">
+            <p className="text-xs sm:text-sm text-muted mt-1 font-mono">
               {searchQ
                 ? `Search results for: ${searchQ}`
                 : "Your personal knowledge vault"}
@@ -181,11 +205,11 @@ export default function HomePage() {
           )}
 
           {!loading && !error && snippets.length > 0 && (
-            <>
+            <div className="space-y-8">
               <div
                 className={
                   viewMode === "grid"
-                    ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+                    ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6"
                     : "flex flex-col gap-3"
                 }
               >
@@ -214,7 +238,7 @@ export default function HomePage() {
                 totalPages={data?.pages ?? 1}
                 onPageChange={setPage}
               />
-            </>
+            </div>
           )}
         </main>
       </div>

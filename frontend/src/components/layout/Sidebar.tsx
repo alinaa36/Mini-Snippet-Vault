@@ -1,9 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import { SidebarProps } from "@/lib/interfaces";
 import { SnippetType } from "@/types";
 import { NAV_ITEMS } from "@/lib/constants";
+
+interface ExtendedSidebarProps extends SidebarProps {
+  isOpen: boolean;
+  onClose: (open: boolean) => void;
+}
 
 export function Sidebar({
   tags,
@@ -11,21 +15,11 @@ export function Sidebar({
   activeTag,
   onTypeChange,
   onTagChange,
-}: SidebarProps) {
-  const [isOpen, setIsOpen] = useState(true);
-
+  isOpen,
+  onClose,
+}: ExtendedSidebarProps) {
   return (
     <>
-      {!isOpen && (
-        <button
-          onClick={() => setIsOpen(true)}
-          className="fixed top-6 left-6 z-[60] w-10 h-10 bg-surface border border-border rounded-xl flex items-center justify-center text-emerald-500 shadow-lg hover:bg-surface2 transition-all duration-200"
-          title="Open Vault"
-        >
-          ☰
-        </button>
-      )}
-
       <aside
         className={`
           w-[240px] min-h-screen bg-surface border-r border-border flex flex-col fixed top-0 left-0 z-50 
@@ -44,7 +38,7 @@ export function Sidebar({
           </div>
 
           <button
-            onClick={() => setIsOpen(false)}
+            onClick={() => onClose(false)}
             className="p-1.5 rounded-md text-subtle hover:bg-surface2 hover:text-text transition-colors"
           >
             <span className="text-xl">«</span>
