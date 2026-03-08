@@ -110,5 +110,5 @@ NEXT_PUBLIC_API_URL=http://localhost:3001
 
 | Сервіс | Посилання |
 |--------|-----------|
-| **Frontend** (Vercel) | https://mini-snippet-vault.onrender.com |
-| **Backend** (Render) | https://mini-snippet-vault.vercel.app |
+| **Frontend** (Vercel) | https://mini-snippet-vault.vercel.app |
+| **Backend** (Render) | https://mini-snippet-vault.onrender.com |
